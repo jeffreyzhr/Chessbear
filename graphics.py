@@ -1,10 +1,12 @@
 import pygame as p
+import numpy as np
 import Engine
 
 
 """
     Graphics driver for pygame. 
 """
+
 
 WIDTH = HEIGHT = 512
 BOARD_DIMENSION = 8
@@ -19,21 +21,41 @@ def load_images():
 
 def main():
     p.init()
-    screen = p.display.set_mode((WIDTH, HEIGHT))
+    window = p.display.set_mode((WIDTH, HEIGHT))
+    p.display.set_caption('Chess Bear AI')
     clock = p.time.Clock()
-    screen.fill(p.Color("white"))
-    gamestate = Engine.GameState()
+    window.fill(p.Color("white"))
+    repr = Engine.GameState()
     load_images()
     running = True
-    drawboard(screen)
+    drawboard(window)
+    print(repr.board[0][0])
+    
     
     while running:
-        for e in p.event.get():
-            if e.type == p.QUIT:
+        for event in p.event.get():
+            if event.type == p.QUIT:
                 running = False
-        drawpieces(screen, gamestate.board)
+        
+            if event.type == p.MOUSEBUTTONDOWN:
+                pos = p.mouse.get_pos()
+                piece, coord = getpieceatpos(pos, repr.board)
+                if piece != '-':
+                    valid_moves = Engine.Movement.get_valid(piece, coord) #this should return a list of tuples (y,x)
+                    
+                    for move in valid_moves:
+                        y,x = move
+                        p.draw.circle(window, p.Color(250, 70, 130), (x*SQ_SIZE + SQ_SIZE//2,y*SQ_SIZE+ SQ_SIZE//2), SQ_SIZE//2, 7)
+                
+                
+                
+                
+        drawpieces(window, repr.board)
         clock.tick(MAX_FPS)
         p.display.flip()
+
+
+
 
 def drawpieces(screen, board):
     for y in range(BOARD_DIMENSION):
@@ -43,12 +65,18 @@ def drawpieces(screen, board):
                 screen.blit(IMAGE_DICT[piece], p.Rect(x*SQ_SIZE, y*SQ_SIZE, SQ_SIZE, SQ_SIZE))
     
 def drawboard(screen):
-        col = [p.Color(196, 137, 26), p.Color('white')]
+        col = [p.Color(240, 216, 192), p.Color(168, 121, 101)] # 1 = dark, 0 = light
         for y in range(BOARD_DIMENSION):
             for x in range(BOARD_DIMENSION):
                 c = col[(y+x)%2]
-                print((y,x,c))
                 p.draw.rect(screen, c, p.Rect(x*SQ_SIZE, y*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+
+# returns type of piece (str) and board location (y,x)
+def getpieceatpos(pos, board):
+    x,y = pos
+    row = x//SQ_SIZE
+    col = y//SQ_SIZE
+    return (board[col][row], (col, row))
     
     
 
