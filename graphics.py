@@ -29,7 +29,6 @@ def main():
     load_images()
     running = True
     drawboard(window)
-    print(repr.board[0][0])
     
     
     while running:
@@ -40,12 +39,13 @@ def main():
             if event.type == p.MOUSEBUTTONDOWN:
                 pos = p.mouse.get_pos()
                 piece, coord = getpieceatpos(pos, repr.board)
+                drawboard(window)
                 if piece != '-':
-                    valid_moves = Engine.Movement.get_valid(piece, coord) #this should return a list of tuples (y,x)
+                    valid_moves = Engine.Movement.get_valid(piece, coord, repr) #this should return a list of tuples (y,x)
                     
                     for move in valid_moves:
                         y,x = move
-                        p.draw.circle(window, p.Color(250, 70, 130), (x*SQ_SIZE + SQ_SIZE//2,y*SQ_SIZE+ SQ_SIZE//2), SQ_SIZE//2, 7)
+                        p.draw.circle(window, p.Color('light blue'), (x*SQ_SIZE + SQ_SIZE//2,y*SQ_SIZE+ SQ_SIZE//2), SQ_SIZE//2, 7)
                 
                 
                 
@@ -76,7 +76,7 @@ def getpieceatpos(pos, board):
     x,y = pos
     row = x//SQ_SIZE
     col = y//SQ_SIZE
-    return (board[col][row], (col, row))
+    return (board[col][row], (col,row))
     
     
 
