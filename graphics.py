@@ -45,7 +45,7 @@ def main():
                     
                     for move in valid_moves:
                         y,x = move
-                        p.draw.circle(window, p.Color('light blue'), (x*SQ_SIZE + SQ_SIZE//2,y*SQ_SIZE+ SQ_SIZE//2), SQ_SIZE//2, 7)
+                        p.draw.circle(window, p.Color('light blue'), (x*SQ_SIZE + SQ_SIZE//2,y*SQ_SIZE+ SQ_SIZE//2), SQ_SIZE//2, 6)
                 
                 
                 
